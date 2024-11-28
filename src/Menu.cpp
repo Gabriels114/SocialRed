@@ -62,6 +62,7 @@ void renderizarLogs(const std::vector<std::string>& logs) {
 void renderizarMenuUsuario(RedSocial& red) {
     static char mensaje[256] = "";
     static char amigo[128] = "";
+    static bool mostrarAmigosDeAmigos = false;
 
     ImGui::Begin("Menú de Usuario");
     ImGui::Text("Usuario Activo: %s", red.getUsuarioConSesionIniciada().c_str());
@@ -81,6 +82,21 @@ void renderizarMenuUsuario(RedSocial& red) {
     if (ImGui::Button("Agregar Amigo")) {
         red.agregarAmigo(amigo);
         amigo[0] = '\0';
+    }
+
+    ImGui::Separator();
+
+    // Mostrar amigos de amigos
+    if (ImGui::Button("Ver Amigos de Mis Amigos")) {
+        mostrarAmigosDeAmigos = !mostrarAmigosDeAmigos;
+    }
+
+    if (mostrarAmigosDeAmigos) {
+        ImGui::Text("Amigos de tus amigos:");
+        std::vector<std::string> amigosDeAmigos = red.obtenerAmigosDeAmigos();
+        for (const auto& amigoDeAmigo : amigosDeAmigos) {
+            ImGui::BulletText("%s es amigo de %s", amigoDeAmigo.c_str(), red.getUsuarioConSesionIniciada().c_str());
+        }
     }
 
     ImGui::Separator();

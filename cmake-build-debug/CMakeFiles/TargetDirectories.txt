@@ -1,5 +1,0 @@
-/home/gabriels/CLionProjects/SocialRed/cmake-build-debug/CMakeFiles/SocialRed.dir
-/home/gabriels/CLionProjects/SocialRed/cmake-build-debug/CMakeFiles/main.dir
-/home/gabriels/CLionProjects/SocialRed/cmake-build-debug/CMakeFiles/RedSocial.dir
-/home/gabriels/CLionProjects/SocialRed/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/gabriels/CLionProjects/SocialRed/cmake-build-debug/CMakeFiles/rebuild_cache.dir

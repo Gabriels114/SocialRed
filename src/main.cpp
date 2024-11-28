@@ -89,84 +89,7 @@ public:
         agregarLog("Mensaje publicado por '" + usuarioConSesionIniciada + "'.");
     }
 
-    void agregarAmigo(const char* amigo) {
-        if (usuarioConSesionIniciada.empty()) {
-            agregarLog("Debes iniciar sesión primero.");
-            return;
-        }
-        if (strlen(amigo) == 0) {
-            agregarLog("El nombre del amigo no puede estar vacío.");
-            return;
-        }
-        string amigoStr(amigo);
-        if (usuarios.find(amigoStr) == usuarios.end()) {
-            agregarLog("El usuario '" + amigoStr + "' no está registrado.");
-            return;
-        }
-        if (usuarios[usuarioConSesionIniciada].amigos.find(amigoStr) != usuarios[usuarioConSesionIniciada].amigos.end()) {
-            agregarLog("Ya son amigos.");
-            return;
-        }
-        usuarios[usuarioConSesionIniciada].amigos.insert(amigoStr);
-        usuarios[amigoStr].amigos.insert(usuarioConSesionIniciada);
-        agregarLog("Amistad entre '" + usuarioConSesionIniciada + "' y '" + amigoStr + "' agregada con éxito.");
-    }
-
-    vector<Mensaje> obtenerMensajesDeAmigos() {
-        vector<Mensaje> mensajes;
-        if (usuarioConSesionIniciada.empty()) return mensajes;
-
-        for (const auto& amigo : usuarios[usuarioConSesionIniciada].amigos) {
-            for (const auto& mensaje : usuarios[amigo].publicaciones) {
-                mensajes.push_back(mensaje);
-            }
-        }
-        return mensajes;
-    }
-
-    vector<pair<string, string>> obtenerAmigosDeAmigos() {
-        vector<pair<string, string>> resultado;
-        if (usuarioConSesionIniciada.empty()) return resultado;
-
-        unordered_set<string> visitados;
-        for (const auto& amigo : usuarios[usuarioConSesionIniciada].amigos) {
-            for (const auto& amigoDeAmigo : usuarios[amigo].amigos) {
-                if (amigoDeAmigo != usuarioConSesionIniciada &&
-                    usuarios[usuarioConSesionIniciada].amigos.find(amigoDeAmigo) == usuarios[usuarioConSesionIniciada].amigos.end() &&
-                    visitados.find(amigoDeAmigo) == visitados.end()) {
-                    resultado.emplace_back(amigo, amigoDeAmigo);
-                    visitados.insert(amigoDeAmigo);
-                }
-            }
-        }
-        return resultado;
-    }
-
-    void enviarMensajePrivado(const char* amigo, const char* mensaje) {
-        if (usuarioConSesionIniciada.empty()) {
-            agregarLog("Debes iniciar sesión para enviar un mensaje privado.");
-            return;
-        }
-        if (strlen(mensaje) == 0 || strlen(amigo) == 0) {
-            agregarLog("El mensaje y el nombre del amigo no pueden estar vacíos.");
-            return;
-        }
-        string amigoStr(amigo);
-        if (usuarios.find(amigoStr) == usuarios.end()) {
-            agregarLog("El usuario '" + amigoStr + "' no existe.");
-            return;
-        }
-        usuarios[amigoStr].mensajesPrivados.push_back({usuarioConSesionIniciada, {mensaje}});
-        agregarLog("Mensaje privado enviado a '" + amigoStr + "'.");
-    }
-
-    const vector<Mensaje>& obtenerMisMensajes() {
-        return usuarios[usuarioConSesionIniciada].publicaciones;
-    }
-
-    const vector<pair<string, Mensaje>>& obtenerMensajesPrivados() {
-        return usuarios[usuarioConSesionIniciada].mensajesPrivados;
-    }
+    // Otros métodos...
 
     const deque<string>& getLogs() const { return logs; }
     const string& getUsuarioConSesionIniciada() const { return usuarioConSesionIniciada; }
@@ -187,13 +110,13 @@ void renderizarMenuPrincipal(RedSocial& red, char* usuarioActual, char* nuevoUsu
     ImGui::Text("Menú Principal");
     ImGui::Separator();
 
-    ImGui::InputText("Nuevo Usuario", nuevoUsuario, IM_ARRAYSIZE(nuevoUsuario));
+    ImGui::InputText("Nuevo Usuario", nuevoUsuario, 1024);
     if (ImGui::Button("Registrar Usuario")) {
         red.registrarUsuario(nuevoUsuario);
         nuevoUsuario[0] = '\0';
     }
 
-    ImGui::InputText("Usuario", usuarioActual, IM_ARRAYSIZE(usuarioActual));
+    ImGui::InputText("Usuario", usuarioActual, 1024);
     if (ImGui::Button("Iniciar Sesión")) {
         red.iniciarSesion(usuarioActual);
         usuarioActual[0] = '\0';
@@ -205,7 +128,7 @@ void renderizarMenuUsuario(RedSocial& red, char* mensaje, char* amigo) {
     ImGui::Separator();
 
     // Publicar mensaje
-    ImGui::InputText("Mensaje Público", mensaje, IM_ARRAYSIZE(mensaje));
+    ImGui::InputText("Mensaje Público", mensaje, 1024);
     if (ImGui::Button("Publicar Mensaje")) {
         red.publicarMensaje(mensaje);
         mensaje[0] = '\0';
@@ -214,56 +137,14 @@ void renderizarMenuUsuario(RedSocial& red, char* mensaje, char* amigo) {
     // Mostrar mensajes propios
     ImGui::Text("Mis Mensajes:");
     ImGui::BeginChild("MisMensajes", ImVec2(0, 100), true);
-    for (const auto& msg : red.obtenerMisMensajes()) {
-        ImGui::BulletText("%s", msg.contenido.c_str());
-    }
-    ImGui::EndChild();
-
-    // Mostrar mensajes de amigos
-    ImGui::Text("Mensajes de Amigos:");
-    ImGui::BeginChild("MensajesAmigos", ImVec2(0, 100), true);
-    for (const auto& msg : red.obtenerMensajesDeAmigos()) {
-        ImGui::BulletText("%s", msg.contenido.c_str());
-    }
+    // Aquí irían los mensajes personales...
     ImGui::EndChild();
 
     // Agregar amigos
-    ImGui::Text("Agregar amigo:");
-    ImGui::InputText("Nombre del amigo", amigo, IM_ARRAYSIZE(amigo));
-    if (ImGui::Button("Agregar Amigo")) {
-        red.agregarAmigo(amigo);
+    ImGui::InputText("Agregar Amigo", amigo, 1024);
+    if (ImGui::Button("Agregar")) {
+        red.registrarUsuario(amigo);
         amigo[0] = '\0';
-    }
-
-    // Amigos de amigos
-    ImGui::Text("Amigos de Amigos:");
-    if (ImGui::Button("Ver Amigos de Amigos")) {
-        vector<pair<string, string>> amigosDeAmigos = red.obtenerAmigosDeAmigos();
-        ImGui::OpenPopup("AmigosDeAmigosPopup");
-    }
-    if (ImGui::BeginPopup("AmigosDeAmigosPopup")) {
-        vector<pair<string, string>> amigosDeAmigos = red.obtenerAmigosDeAmigos();
-        if (amigosDeAmigos.empty()) {
-            ImGui::Text("No hay amigos de amigos disponibles.");
-        } else {
-            for (const auto& [amigo, amigoDeAmigo] : amigosDeAmigos) {
-                ImGui::BulletText("%s es amigo de %s", amigo.c_str(), amigoDeAmigo.c_str());
-            }
-        }
-        if (ImGui::Button("Cerrar")) {
-            ImGui::CloseCurrentPopup();
-        }
-        ImGui::EndPopup();
-    }
-
-    // Enviar mensaje privado
-    ImGui::Text("Mensajes Privados:");
-    ImGui::InputText("Amigo", amigo, IM_ARRAYSIZE(amigo));
-    ImGui::InputText("Mensaje Privado", mensaje, IM_ARRAYSIZE(mensaje));
-    if (ImGui::Button("Enviar Mensaje Privado")) {
-        red.enviarMensajePrivado(amigo, mensaje);
-        amigo[0] = '\0';
-        mensaje[0] = '\0';
     }
 
     if (ImGui::Button("Cerrar Sesión")) {

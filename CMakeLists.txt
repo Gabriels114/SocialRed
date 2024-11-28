@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
+cmake_policy(SET CMP0072 NEW)
+
 project(SocialRed)
 
-# Estándar de C++
 set(CMAKE_CXX_STANDARD 17)
 
-# Rutas de archivos
+# Directorios
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 set(THIRD_PARTY_DIR ${CMAKE_SOURCE_DIR}/third_party)
@@ -14,6 +15,7 @@ set(SOURCES
         ${SRC_DIR}/main.cpp
         ${SRC_DIR}/RedSocial.cpp
         ${SRC_DIR}/MatrizAdyacencia.cpp
+        ${SRC_DIR}/Menu.cpp
         ${THIRD_PARTY_DIR}/imgui.cpp
         ${THIRD_PARTY_DIR}/imgui_draw.cpp
         ${THIRD_PARTY_DIR}/imgui_tables.cpp
@@ -22,10 +24,11 @@ set(SOURCES
         ${THIRD_PARTY_DIR}/imgui_impl_opengl3.cpp
 )
 
+
 # Incluir encabezados
 include_directories(${INCLUDE_DIR} ${THIRD_PARTY_DIR})
 
-# Dependencias externas
+# Dependencias
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 

@@ -1,44 +1,44 @@
-// RedSocial.h
 #ifndef REDSOCIAL_H
 #define REDSOCIAL_H
 
-#include <iostream>
+#include <string>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <string>
-#include <deque>
-
-using namespace std;
 
 struct Mensaje {
-    string contenido;
+    std::string contenido;
 };
 
 class RedSocial {
 private:
-    unordered_map<string, vector<Mensaje>> publicaciones;
-    unordered_map<string, unordered_set<string>> amigos;
-    string usuarioActivo;
-    deque<string> logs;
+    std::unordered_map<std::string, std::vector<Mensaje>> publicaciones;
+    std::unordered_map<std::string, std::unordered_set<std::string>> amigos;
+    std::string usuarioConSesionIniciada;
 
-    void agregarLog(const string& mensaje);
+    // Vector de logs
+    std::vector<std::string> logs;
+
+    // Método para agregar logs
+    void agregarLog(const std::string& mensaje) {
+        logs.push_back(mensaje); // Agrega el mensaje al registro
+        if (logs.size() > 10) { // Limita el tamaño del registro a los últimos 10 eventos
+            logs.erase(logs.begin()); // Elimina el mensaje más antiguo
+        }
+    }
 
 public:
-    void cargarUsuariosPredefinidos();
-    void registrarUsuario(const string& nombre);
-    bool iniciarSesion(const string& nombre);
+    void registrarUsuario(const std::string& nombre);
+    bool iniciarSesion(const std::string& nombre);
     void cerrarSesion();
-    void publicarMensaje(const string& mensaje);
-    vector<string> obtenerListaUsuarios();
-    vector<string> obtenerAmigos(const string& usuario);
-    vector<string> obtenerPublicaciones(const string& usuario);
-    string obtenerUsuarioActivo();
-    vector<Mensaje> obtenerMensajesDeAmigos();
-    vector<pair<string, string>> obtenerAmigosDeAmigos();
-    void enviarMensajePrivado(const string& amigo, const string& mensaje);
-    const vector<Mensaje>& obtenerMisMensajes();
-    const deque<string>& getLogs() const;
+    void publicarMensaje(const std::string& mensaje);
+    void agregarAmigo(const std::string& amigo);
+
+    const std::string& getUsuarioConSesionIniciada() const;
+    std::vector<std::string> obtenerMensajesUsuario();
+    std::unordered_set<std::string> obtenerAmigos();
+
+    const std::vector<std::string>& getLogs() const { return logs; }
 };
 
-#endif //REDSOCIAL_H
+#endif // REDSOCIAL_H

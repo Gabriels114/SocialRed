@@ -1,9 +1,9 @@
+// RedSocial.cpp
 #include "RedSocial.h"
 #include <iostream>
 
 void RedSocial::registrarUsuario(const std::string& nombre) {
     if (publicaciones.find(nombre) != publicaciones.end()) {
-        agregarLog("El usuario '" + nombre + "' ya está registrado.");
         std::cout << "El usuario ya está registrado.\n";
         return;
     }
@@ -15,7 +15,6 @@ void RedSocial::registrarUsuario(const std::string& nombre) {
 
 bool RedSocial::iniciarSesion(const std::string& nombre) {
     if (publicaciones.find(nombre) == publicaciones.end()) {
-        agregarLog("Usuario '" + nombre + "' no encontrado.");
         std::cout << "Usuario no encontrado.\n";
         return false;
     }
@@ -27,7 +26,6 @@ bool RedSocial::iniciarSesion(const std::string& nombre) {
 
 void RedSocial::cerrarSesion() {
     if (usuarioConSesionIniciada.empty()) {
-        agregarLog("No hay una sesión activa.");
         std::cout << "No hay una sesión activa.\n";
         return;
     }
@@ -38,7 +36,6 @@ void RedSocial::cerrarSesion() {
 
 void RedSocial::publicarMensaje(const std::string& mensaje) {
     if (usuarioConSesionIniciada.empty()) {
-        agregarLog("Inicia sesión para publicar mensajes.");
         std::cout << "Inicia sesión para publicar mensajes.\n";
         return;
     }
@@ -49,12 +46,10 @@ void RedSocial::publicarMensaje(const std::string& mensaje) {
 
 void RedSocial::agregarAmigo(const std::string& amigo) {
     if (usuarioConSesionIniciada.empty()) {
-        agregarLog("Inicia sesión para agregar amigos.");
         std::cout << "Inicia sesión para agregar amigos.\n";
         return;
     }
     if (amigos[usuarioConSesionIniciada].find(amigo) != amigos[usuarioConSesionIniciada].end()) {
-        agregarLog("Ya son amigos.");
         std::cout << "Ya son amigos.\n";
         return;
     }
@@ -85,4 +80,32 @@ std::unordered_set<std::string> RedSocial::obtenerAmigos() {
         return {};
     }
     return amigos[usuarioConSesionIniciada];
+}
+
+std::vector<std::string> RedSocial::obtenerMensajesDeAmigos() {
+    std::vector<std::string> mensajes;
+    if (usuarioConSesionIniciada.empty()) {
+        return mensajes;
+    }
+
+    // Obtenemos los mensajes de los amigos
+    for (const auto& amigo : amigos[usuarioConSesionIniciada]) {
+        for (const auto& mensaje : publicaciones[amigo]) {
+            mensajes.push_back(amigo + ": " + mensaje.contenido);
+        }
+    }
+    return mensajes;
+}
+
+// Función para agregar logs
+void RedSocial::agregarLog(const std::string& mensaje) {
+    logs.push_back(mensaje);
+    if (logs.size() > 10) {
+        logs.erase(logs.begin());
+    }
+}
+
+// Función para obtener los logs
+std::vector<std::string> RedSocial::getLogs() const {
+    return logs;
 }

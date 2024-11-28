@@ -6,26 +6,18 @@
 #include <unordered_map>
 #include <unordered_set>
 
+// Estructura para representar mensajes
 struct Mensaje {
     std::string contenido;
 };
 
+// Clase RedSocial
 class RedSocial {
 private:
     std::unordered_map<std::string, std::vector<Mensaje>> publicaciones;
     std::unordered_map<std::string, std::unordered_set<std::string>> amigos;
     std::string usuarioConSesionIniciada;
-
-    // Vector de logs
-    std::vector<std::string> logs;
-
-    // Método para agregar logs
-    void agregarLog(const std::string& mensaje) {
-        logs.push_back(mensaje); // Agrega el mensaje al registro
-        if (logs.size() > 10) { // Limita el tamaño del registro a los últimos 10 eventos
-            logs.erase(logs.begin()); // Elimina el mensaje más antiguo
-        }
-    }
+    std::vector<std::string> logs; // Vector para almacenar los logs de eventos
 
 public:
     void registrarUsuario(const std::string& nombre);
@@ -37,8 +29,10 @@ public:
     const std::string& getUsuarioConSesionIniciada() const;
     std::vector<std::string> obtenerMensajesUsuario();
     std::unordered_set<std::string> obtenerAmigos();
+    std::vector<std::string> obtenerMensajesDeAmigos();
 
-    const std::vector<std::string>& getLogs() const { return logs; }
+    void agregarLog(const std::string& mensaje); // Función para agregar log
+    std::vector<std::string> getLogs() const; // Función para obtener logs
 };
 
 #endif // REDSOCIAL_H

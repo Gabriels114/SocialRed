@@ -7,9 +7,17 @@ void renderizarMenuPrincipal(RedSocial& red, bool& salirPrograma) {
     static char nuevoUsuario[128] = "";
     static char iniciarUsuario[128] = "";
 
-    ImGui::Begin("Menú Principal");
+    ImGui::Begin("Red social Troyana");
 
-    ImGui::InputText("Nuevo Usuario", nuevoUsuario, IM_ARRAYSIZE(nuevoUsuario));
+    ImGui::Text("Bienvenido a la red social Troyana");
+    ImGui::Separator();
+    ImGui::Text("\n");
+    ImGui::Text("Registra un nuevo usuario o inicia sesión con uno existente");
+    ImGui::Separator();
+    ImGui::Text("\n");
+
+    ImGui::Text("Registrate");
+    ImGui::InputText(" ", nuevoUsuario, IM_ARRAYSIZE(nuevoUsuario));
     if (ImGui::Button("Registrar Usuario")) {
         red.registrarUsuario(nuevoUsuario);
         nuevoUsuario[0] = '\0';
@@ -17,7 +25,8 @@ void renderizarMenuPrincipal(RedSocial& red, bool& salirPrograma) {
 
     ImGui::Separator();
 
-    ImGui::InputText("Iniciar Sesión con Usuario", iniciarUsuario, IM_ARRAYSIZE(iniciarUsuario));
+    ImGui::Text("\nIniciar Sesión con tu Usuario");
+    ImGui::InputText("  ", iniciarUsuario, IM_ARRAYSIZE(iniciarUsuario));
     if (ImGui::Button("Iniciar Sesión")) {
         red.iniciarSesion(iniciarUsuario);
         iniciarUsuario[0] = '\0';

@@ -12,18 +12,17 @@ set(THIRD_PARTY_DIR ${CMAKE_SOURCE_DIR}/third_party)
 
 # Archivos fuente principales
 set(SOURCES
-        ${SRC_DIR}/main.cpp
-        ${SRC_DIR}/RedSocial.cpp
-        ${SRC_DIR}/MatrizAdyacencia.cpp
-        ${SRC_DIR}/Menu.cpp
-        ${THIRD_PARTY_DIR}/imgui.cpp
-        ${THIRD_PARTY_DIR}/imgui_draw.cpp
-        ${THIRD_PARTY_DIR}/imgui_tables.cpp
-        ${THIRD_PARTY_DIR}/imgui_widgets.cpp
-        ${THIRD_PARTY_DIR}/imgui_impl_glfw.cpp
-        ${THIRD_PARTY_DIR}/imgui_impl_opengl3.cpp
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/RedSocial.cpp
+    ${SRC_DIR}/MatrizAdyacencia.cpp
+    ${SRC_DIR}/Menu.cpp
+    ${THIRD_PARTY_DIR}/imgui.cpp
+    ${THIRD_PARTY_DIR}/imgui_draw.cpp
+    ${THIRD_PARTY_DIR}/imgui_tables.cpp
+    ${THIRD_PARTY_DIR}/imgui_widgets.cpp
+    ${THIRD_PARTY_DIR}/imgui_impl_glfw.cpp
+    ${THIRD_PARTY_DIR}/imgui_impl_opengl3.cpp
 )
-
 
 # Incluir encabezados
 include_directories(${INCLUDE_DIR} ${THIRD_PARTY_DIR})
@@ -36,4 +35,8 @@ find_package(glfw3 REQUIRED)
 add_executable(SocialRed ${SOURCES})
 
 # Linkeo de librerías
-target_link_libraries(SocialRed PRIVATE OpenGL::GL glfw)
+if (WIN32)
+    target_link_libraries(SocialRed PRIVATE OpenGL::GL glfw)
+elseif (UNIX)
+    target_link_libraries(SocialRed PRIVATE OpenGL::GL glfw pthread)
+endif()

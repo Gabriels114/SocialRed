@@ -129,7 +129,7 @@ build CMakeFiles/SocialRed.dir/third_party/imgui_impl_opengl3.cpp.o: CXX_COMPILE
 
 build SocialRed: CXX_EXECUTABLE_LINKER__SocialRed_Debug CMakeFiles/SocialRed.dir/src/main.cpp.o CMakeFiles/SocialRed.dir/src/RedSocial.cpp.o CMakeFiles/SocialRed.dir/src/MatrizAdyacencia.cpp.o CMakeFiles/SocialRed.dir/src/Menu.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui_draw.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui_tables.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui_widgets.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui_impl_glfw.cpp.o CMakeFiles/SocialRed.dir/third_party/imgui_impl_opengl3.cpp.o | /usr/lib/x86_64-linux-gnu/libglfw.so.3.4 /usr/lib/x86_64-linux-gnu/libGLX.so /usr/lib/x86_64-linux-gnu/libOpenGL.so
   FLAGS = -g
-  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libglfw.so.3.4  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
+  LINK_LIBRARIES = /usr/lib/x86_64-linux-gnu/libglfw.so.3.4  -lpthread  /usr/lib/x86_64-linux-gnu/libGLX.so  /usr/lib/x86_64-linux-gnu/libOpenGL.so
   OBJECT_DIR = CMakeFiles/SocialRed.dir
   POST_BUILD = :
   PRE_LINK = :

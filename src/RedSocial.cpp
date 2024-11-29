@@ -3,6 +3,7 @@
 #include <queue>
 #include <unordered_set>
 
+
 void RedSocial::registrarUsuario(const std::string& nombre) {
     if (publicaciones.find(nombre) != publicaciones.end()) {
         std::cout << "El usuario ya está registrado.\n";

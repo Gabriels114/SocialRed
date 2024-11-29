@@ -63,6 +63,7 @@ void renderizarMenuUsuario(RedSocial& red) {
     static char mensaje[256] = "";
     static char amigo[128] = "";
     static bool mostrarAmigosDeAmigos = false;
+    static bool mostrarMatrizAdyacencia = false;
 
     ImGui::Begin("Menú de Usuario");
     ImGui::Text("Usuario Activo: %s", red.getUsuarioConSesionIniciada().c_str());
@@ -120,6 +121,39 @@ void renderizarMenuUsuario(RedSocial& red) {
     renderizarLogs(red.getLogs()); // Mostrar los logs en la interfaz principal
 
     ImGui::Separator();
+
+    // Botón para mostrar la matriz de adyacencia
+    if (ImGui::Button("Mostrar Matriz de Adyacencia")) {
+        mostrarMatrizAdyacencia = !mostrarMatrizAdyacencia;
+    }
+
+    if (mostrarMatrizAdyacencia) {
+        ImGui::Text("Matriz de Adyacencia:");
+        const auto& matriz = red.obtenerMatrizAdyacencia();
+        const auto& usuarios = red.obtenerUsuarios(); // Asumiendo que tienes un método para obtener los nombres de los usuarios
+        if (ImGui::BeginTable("MatrizAdyacencia", matriz.size() + 1)) {
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text(" ");
+            for (const auto& usuario : usuarios) {
+                ImGui::TableNextColumn();
+                ImGui::Text("%s", usuario.c_str());
+            }
+            for (size_t i = 0; i < matriz.size(); ++i) {
+                ImGui::TableNextRow();
+                ImGui::TableNextColumn();
+                ImGui::Text("%s", usuarios[i].c_str());
+                for (size_t j = 0; j < matriz[i].size(); ++j) {
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d", matriz[i][j]);
+                }
+            }
+            ImGui::EndTable();
+        }
+    }
+
+    ImGui::Separator();
+
     // Botón de cerrar sesión
     if (ImGui::Button("Cerrar Sesión")) {
         red.cerrarSesion();
@@ -127,5 +161,3 @@ void renderizarMenuUsuario(RedSocial& red) {
 
     ImGui::End();
 }
-
-

@@ -23,7 +23,8 @@ public:
     std::vector<std::string> obtenerMensajesDeAmigos();
     void agregarLog(const std::string& mensaje);
     std::vector<std::string> getLogs() const;
-    std::vector<std::string> obtenerAmigosDeAmigos();
+    std::vector<std::string> obtenerAmigosDeAmigos() const;
+    std::string obtenerUsuarioPorIndice(int indice) const;
     std::vector<std::string> obtenerAmigosDeAmigosDeAmigos();
     void actualizarMatrizAdyacencia(const std::string& usuario1, const std::string& usuario2, bool estado);
     // Method to get the adjacency matrix

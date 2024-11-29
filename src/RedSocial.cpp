@@ -117,29 +117,41 @@ std::vector<std::string> RedSocial::getLogs() const {
     return logs;
 }
 
-std::vector<std::string> RedSocial::obtenerAmigosDeAmigos() {
-    std::vector<std::string> amigosDeAmigos;
-    std::unordered_set<std::string> visitados;
-
-    if (usuarioConSesionIniciada.empty()) {
-        return amigosDeAmigos;
-    }
-
-    for (const auto& amigo : amigos[usuarioConSesionIniciada]) {
-        visitados.insert(amigo);
-    }
-
-    for (const auto& amigo : amigos[usuarioConSesionIniciada]) {
-        for (const auto& amigoDeAmigo : amigos[amigo]) {
-            if (visitados.find(amigoDeAmigo) == visitados.end()) {
-                amigosDeAmigos.push_back(amigoDeAmigo);
-                visitados.insert(amigoDeAmigo);
+std::vector<std::string> RedSocial::obtenerAmigosDeAmigos() const {
+    std::unordered_set<std::string> amigosDirectos;
+    std::unordered_set<std::string> amigosDeAmigosSet;
+    auto itUsuario = usuarioIndice.find(usuarioConSesionIniciada);
+    if (itUsuario != usuarioIndice.end()) {
+        int indiceUsuario = itUsuario->second;
+        for (size_t i = 0; i < matrizAdyacencia.size(); ++i) {
+            if (matrizAdyacencia[indiceUsuario][i]) { // Amigo directo
+                amigosDirectos.insert(obtenerUsuarioPorIndice(i));
+                for (size_t j = 0; j < matrizAdyacencia.size(); ++j) {
+                    if (matrizAdyacencia[i][j] && j != indiceUsuario) { // Amigo de amigo
+                        amigosDeAmigosSet.insert(obtenerUsuarioPorIndice(j));
+                    }
+                }
             }
         }
+        // Eliminar los amigos directos del conjunto de amigos de amigos
+        for (const auto& amigoDirecto : amigosDirectos) {
+            amigosDeAmigosSet.erase(amigoDirecto);
+        }
+        // Eliminar al usuario activo del conjunto de amigos de amigos
+        amigosDeAmigosSet.erase(usuarioConSesionIniciada);
     }
-
-    return amigosDeAmigos;
+    return std::vector<std::string>(amigosDeAmigosSet.begin(), amigosDeAmigosSet.end());
 }
+
+std::string RedSocial::obtenerUsuarioPorIndice(int indice) const {
+    for (const auto& par : usuarioIndice) {
+        if (par.second == indice) {
+            return par.first;
+        }
+    }
+    return "";
+}
+
 
 std::vector<std::string> RedSocial::obtenerAmigosDeAmigosDeAmigos() {
     std::vector<std::string> amigosDeAmigosDeAmigos;

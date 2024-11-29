@@ -131,7 +131,7 @@ void renderizarMenuUsuario(RedSocial& red) {
         ImGui::Text("Matriz de Adyacencia:");
         const auto& matriz = red.obtenerMatrizAdyacencia();
         const auto& usuarios = red.obtenerUsuarios(); // Asumiendo que tienes un método para obtener los nombres de los usuarios
-        if (ImGui::BeginTable("MatrizAdyacencia", matriz.size() + 1)) {
+        if (ImGui::BeginTable("MatrizAdyacencia", usuarios.size() + 1)) {
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
             ImGui::Text(" ");
@@ -139,11 +139,11 @@ void renderizarMenuUsuario(RedSocial& red) {
                 ImGui::TableNextColumn();
                 ImGui::Text("%s", usuario.c_str());
             }
-            for (size_t i = 0; i < matriz.size(); ++i) {
+            for (size_t i = 0; i < usuarios.size(); ++i) {
                 ImGui::TableNextRow();
                 ImGui::TableNextColumn();
                 ImGui::Text("%s", usuarios[i].c_str());
-                for (size_t j = 0; j < matriz[i].size(); ++j) {
+                for (size_t j = 0; j < usuarios.size(); ++j) {
                     ImGui::TableNextColumn();
                     ImGui::Text("%d", matriz[i][j]);
                 }
